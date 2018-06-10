@@ -62,6 +62,14 @@ class ViewController: UIViewController {
             calculate.operators.append("-")
             calculate.stringNumbers.append("")
             updateDisplay()
+        } else if tagOperator! == "×" {
+            calculate.operators.append("×")
+            calculate.stringNumbers.append("")
+            updateDisplay()
+        } else if tagOperator! == "÷" {
+            calculate.operators.append("÷")
+            calculate.stringNumbers.append("")
+            updateDisplay()
         } else if tagOperator! == "=" {
             total()
         }

@@ -43,6 +43,10 @@ class Calculate {
                     total += number
                 } else if operators[enumerated] == "-" {
                     total -= number
+                } else if operators[enumerated] == "×" {
+                    total *= number
+                } else if operators[enumerated] == "÷" {
+                    total /= number
                 }
             }
         }
