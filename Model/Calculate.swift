@@ -12,7 +12,7 @@ class Calculate {
     // MARK: - Properties
     var stringNumbers: [String] = [String()]
     var operators: [String] = ["+"]
-    
+
     // MARK: - Methods
     func addNewNumber(_ newNumber: Int) {
         if let stringNumber = stringNumbers.last {
@@ -21,7 +21,7 @@ class Calculate {
             stringNumbers[stringNumbers.count-1] = stringNumberMutable
         }
     }
-    
+
     func calculText() -> String {
         var text = ""
         for (number, stringNumber) in stringNumbers.enumerated() {
@@ -34,7 +34,7 @@ class Calculate {
         }
         return text
     }
-    
+
     func calculateTotal() -> Int {
         var total = 0
         for (enumerated, stringNumber) in stringNumbers.enumerated() {
@@ -52,7 +52,7 @@ class Calculate {
         }
         return total
     }
-    
+
     func clear() {
         stringNumbers = [String()]
         operators = ["+"]

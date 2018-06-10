@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController {
     // MARK: - Properties
     let calculate = Calculate()
-    
+
     var isExpressionCorrect: Bool {
         if let stringNumber = calculate.stringNumbers.last {
             if stringNumber.isEmpty {
@@ -29,7 +29,7 @@ class ViewController: UIViewController {
         }
         return true
     }
-    
+
     var canAddOperator: Bool {
         if let stringNumber = calculate.stringNumbers.last {
             if stringNumber.isEmpty {
@@ -41,17 +41,17 @@ class ViewController: UIViewController {
         }
         return true
     }
-    
+
     // MARK: - Outlets
     @IBOutlet weak var textView: UITextView!
-    
+
     // MARK: - Action
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         let number = sender.tag
         calculate.addNewNumber(number)
         updateDisplay()
     }
-    
+
     @IBAction func calculateOperator(_ sender: UIButton) {
         let tagOperator = sender.currentTitle
         if tagOperator! == "+" {
@@ -74,13 +74,13 @@ class ViewController: UIViewController {
             total()
         }
     }
-    
+
     // MARK: - Methods
     func updateDisplay() {
         let text = calculate.calculText()
         textView.text = text
     }
-    
+
     func total() {
         if !isExpressionCorrect {
             return
