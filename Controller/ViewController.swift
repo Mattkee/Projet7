@@ -68,7 +68,6 @@ class ViewController: UIViewController {
             updateDisplay()
         } else if tagOperator! == "=" {
             total()
-            updateDisplay()
         }
     }
 
