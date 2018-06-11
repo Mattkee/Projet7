@@ -7,7 +7,23 @@
 //
 
 import XCTest
+@testable import CountOnMe
 
 class CalculateTest: XCTestCase {
-    
+
+    var calculate: Calculate!
+
+    override func setUp() {
+        super .setUp()
+        calculate = Calculate()
+    }
+
+    func testGivenNoElementToCalculate_WhenAddToCalculate1Plus1_ThenTextToDisplay() {
+
+        calculate.addNewNumber(1)
+        calculate.addNewOperator("+")
+        calculate.addNewNumber(1)
+
+        XCTAssertEqual(calculate.calculText(), "1+1")
+    }
 }

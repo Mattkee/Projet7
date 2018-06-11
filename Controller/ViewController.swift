@@ -55,23 +55,20 @@ class ViewController: UIViewController {
     @IBAction func calculateOperator(_ sender: UIButton) {
         let tagOperator = sender.currentTitle
         if tagOperator! == "+" {
-            calculate.operators.append("+")
-            calculate.stringNumbers.append("")
+            calculate.addNewOperator("+")
             updateDisplay()
         } else if tagOperator! == "-" {
-            calculate.operators.append("-")
-            calculate.stringNumbers.append("")
+            calculate.addNewOperator("-")
             updateDisplay()
         } else if tagOperator! == "×" {
-            calculate.operators.append("×")
-            calculate.stringNumbers.append("")
+            calculate.addNewOperator("×")
             updateDisplay()
         } else if tagOperator! == "÷" {
-            calculate.operators.append("÷")
-            calculate.stringNumbers.append("")
+            calculate.addNewOperator("÷")
             updateDisplay()
         } else if tagOperator! == "=" {
             total()
+            updateDisplay()
         }
     }
 

@@ -22,6 +22,11 @@ class Calculate {
         }
     }
 
+    func addNewOperator(_ newOperator: String) {
+        operators.append(newOperator)
+        stringNumbers.append("")
+    }
+
     func calculText() -> String {
         var text = ""
         for (number, stringNumber) in stringNumbers.enumerated() {
