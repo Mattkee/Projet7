@@ -56,6 +56,14 @@ class Calculate {
         }
     }
 
+    func addDecimal() {
+        if stringNumbers.count == 0 {
+            stringNumbers[0] = "0."
+        } else {
+            stringNumbers[stringNumbers.count-1] = stringNumbers[stringNumbers.count-1]+"."
+        }
+    }
+
     func calculText() -> String {
         var text = ""
         for (number, stringNumber) in stringNumbers.enumerated() {

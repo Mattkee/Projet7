@@ -97,6 +97,10 @@ class ViewController: UIViewController {
             }
         }
     }
+    @IBAction func tappedDecimal(_ sender: UIButton) {
+        calculate.addDecimal()
+        updateDisplay()
+    }
 
     // MARK: - Methods
     func updateDisplay() {
