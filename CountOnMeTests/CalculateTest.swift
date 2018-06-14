@@ -18,12 +18,21 @@ class CalculateTest: XCTestCase {
         calculate = Calculate()
     }
 
-    func testGivenNoElementToCalculate_WhenAddToCalculate1Plus1_ThenTextToDisplay() {
+    func testGivenNoElementToCalculate_WhenAddToCalculate1Plus1_ThenTextToDisplayIs1Plus1() {
 
         calculate.addNewNumber(1)
         calculate.addNewOperator("+")
         calculate.addNewNumber(1)
 
         XCTAssertEqual(calculate.calculText(), "1+1")
+    }
+
+    func testGivenElementToCalculateIs1Plus1_WhenCalculating1Plus1_ThenResultIs2() {
+
+        calculate.addNewNumber(1)
+        calculate.addNewOperator("+")
+        calculate.addNewNumber(1)
+
+        XCTAssertEqual(calculate.calculateTotal(), 2)
     }
 }

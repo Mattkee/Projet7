@@ -82,7 +82,12 @@ class ViewController: UIViewController {
             return
         }
         let total = calculate.calculateTotal()
-        textView.text = textView.text + "=\(total)"
-        calculate.clear()
+        if calculate.issue == true {
+            textView.text = "Impossible de diviser par zero"
+            calculate.clear()
+        } else {
+            textView.text = textView.text + "=\(total)"
+            calculate.clear()
+        }
     }
 }
