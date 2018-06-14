@@ -52,7 +52,7 @@ class ViewController: UIViewController {
     // MARK: - Action
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         let number = sender.tag
-        calculate.addNewNumber(number)
+        calculate.addNewNumber(Double(number))
         updateDisplay()
     }
 
@@ -113,8 +113,13 @@ class ViewController: UIViewController {
             textView.text = "Impossible de diviser par zero"
             calculate.clear()
         } else {
-            textView.text = textView.text + "=\(total)"
-            calculate.clear()
+            if String(total) == String(Int(total))+".0" {
+                textView.text = textView.text + "=\(Int(total))"
+                calculate.clear()
+            } else {
+                textView.text = textView.text + "=\(total)"
+                calculate.clear()
+            }
         }
     }
 }

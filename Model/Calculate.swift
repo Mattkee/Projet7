@@ -12,7 +12,7 @@ class Calculate {
     // MARK: - Properties
     var stringNumbers: [String] = [String()]
     var operators: [String] = ["+"]
-    var total = 0
+    var total: Double = 0
     var multiple: Bool {
         for enumerated in operators.indices where operators[enumerated] == "×" {
                 return true
@@ -28,11 +28,19 @@ class Calculate {
     var issue = false
 
     // MARK: - Methods
-    func addNewNumber(_ newNumber: Int) {
-        if let stringNumber = stringNumbers.last {
-            var stringNumberMutable = stringNumber
-            stringNumberMutable += "\(newNumber)"
-            stringNumbers[stringNumbers.count-1] = stringNumberMutable
+    func addNewNumber(_ newNumber: Double) {
+        if String(newNumber) == String(Int(newNumber))+".0" {
+            if let stringNumber = stringNumbers.last {
+                var stringNumberMutable = stringNumber
+                stringNumberMutable += "\(Int(newNumber))"
+                stringNumbers[stringNumbers.count-1] = stringNumberMutable
+            }
+        } else {
+            if let stringNumber = stringNumbers.last {
+                var stringNumberMutable = stringNumber
+                stringNumberMutable += "\(newNumber)"
+                stringNumbers[stringNumbers.count-1] = stringNumberMutable
+            }
         }
     }
 
@@ -61,7 +69,7 @@ class Calculate {
         return text
     }
 
-    func calculateTotal() -> Int {
+    func calculateTotal() -> Double {
         repeat {
            calculePreparationForMultiple()
         } while multiple == true
@@ -71,7 +79,7 @@ class Calculate {
         } while division == true
 
         for (enumerated, stringNumber) in stringNumbers.enumerated() {
-            if let number = Int(stringNumber) {
+            if let number = Double(stringNumber) {
                 if operators[enumerated] == "+" {
                     total += number
                 } else if operators[enumerated] == "-" {
@@ -84,7 +92,7 @@ class Calculate {
 
     func calculePreparationForMultiple() {
         for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "×" {
-                let total = Int(stringNumbers[enumerated-1])! * Int(stringNumber)!
+                let total = Double(stringNumbers[enumerated-1])! * Double(stringNumber)!
                 stringNumbers[enumerated-1] = String(total)
                 operators.remove(at: enumerated)
                 stringNumbers.remove(at: enumerated)
@@ -94,13 +102,13 @@ class Calculate {
 
     func calculePreparationForDivision() {
         for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "÷" {
-            if Int(stringNumber)! == 0 {
+            if Double(stringNumber)! == 0 {
                 issue = true
                 operators.remove(at: enumerated)
                 stringNumbers.remove(at: enumerated)
                 return
             } else {
-                let total = Int(stringNumbers[enumerated-1])! / Int(stringNumber)!
+                let total = Double(stringNumbers[enumerated-1])! / Double(stringNumber)!
                 stringNumbers[enumerated-1] = String(total)
                 operators.remove(at: enumerated)
                 stringNumbers.remove(at: enumerated)
