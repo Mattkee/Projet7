@@ -75,6 +75,7 @@ class ViewController: UIViewController {
         } else if tagOperator! == "AC" {
             calculate.clear()
             textView.text = "0"
+            calculate.total = 0
         } else if tagOperator! == "⇐" {
             if lastTap == true && textView.text != "0" {
                 let indexOperator = calculate.operators.count
@@ -86,6 +87,7 @@ class ViewController: UIViewController {
                 if calculate.stringNumbers.count == 1 || calculate.operators.count == 1 {
                     calculate.clear()
                     textView.text = "0"
+                    calculate.total = 0
                 } else {
                 let indexNumber = calculate.stringNumbers.count
                     calculate.stringNumbers.remove(at: indexNumber-1)

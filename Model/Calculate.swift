@@ -12,6 +12,7 @@ class Calculate {
     // MARK: - Properties
     var stringNumbers: [String] = [String()]
     var operators: [String] = ["+"]
+    var total = 0
     var multiple: Bool {
         for enumerated in operators.indices where operators[enumerated] == "×" {
                 return true
@@ -36,8 +37,15 @@ class Calculate {
     }
 
     func addNewOperator(_ newOperator: String) {
-        operators.append(newOperator)
-        stringNumbers.append("")
+        if operators.count == 1 && total != 0 {
+            addNewNumber(total)
+            total = 0
+            operators.append(newOperator)
+            stringNumbers.append("")
+        } else {
+            operators.append(newOperator)
+            stringNumbers.append("")
+        }
     }
 
     func calculText() -> String {
@@ -62,7 +70,6 @@ class Calculate {
             calculePreparationForDivision()
         } while division == true
 
-        var total = 0
         for (enumerated, stringNumber) in stringNumbers.enumerated() {
             if let number = Int(stringNumber) {
                 if operators[enumerated] == "+" {
