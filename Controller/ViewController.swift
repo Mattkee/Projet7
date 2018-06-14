@@ -14,7 +14,7 @@ class ViewController: UIViewController {
 
     var isExpressionCorrect: Bool {
         if let stringNumber = calculate.stringNumbers.last {
-            if stringNumber.isEmpty {
+            if stringNumber.isEmpty || calculate.stringNumbers.count < 2 {
                 if calculate.stringNumbers.count == 1 {
                     let alertVC = UIAlertController(title: "Zéro!", message: "Démarrez un nouveau calcul !", preferredStyle: .alert)
                     alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
@@ -40,6 +40,10 @@ class ViewController: UIViewController {
             }
         }
         return true
+    }
+
+    var lastTap: Bool {
+        return calculate.stringNumbers.last == "" && calculate.operators.count > 1
     }
 
     // MARK: - Outlets
@@ -68,6 +72,27 @@ class ViewController: UIViewController {
             updateDisplay()
         } else if tagOperator! == "=" {
             total()
+        } else if tagOperator! == "AC" {
+            calculate.clear()
+            textView.text = "0"
+        } else if tagOperator! == "⇐" {
+            if lastTap == true && textView.text != "0" {
+                let indexOperator = calculate.operators.count
+                let indexNumber = calculate.stringNumbers.count
+                calculate.operators.remove(at: indexOperator-1)
+                calculate.stringNumbers.remove(at: indexNumber-1)
+                updateDisplay()
+            } else {
+                if calculate.stringNumbers.count == 1 || calculate.operators.count == 1 {
+                    calculate.clear()
+                    textView.text = "0"
+                } else {
+                let indexNumber = calculate.stringNumbers.count
+                    calculate.stringNumbers.remove(at: indexNumber-1)
+                    calculate.stringNumbers.append("")
+                    updateDisplay()
+                }
+            }
         }
     }
 
