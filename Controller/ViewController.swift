@@ -76,30 +76,33 @@ class ViewController: UIViewController {
             calculate.clear()
             textView.text = "0"
             calculate.total = 0
+            calculate.decimal = false
         } else if tagOperator! == "⇐" {
             if lastTap == true && textView.text != "0" {
-                let indexOperator = calculate.operators.count
-                let indexNumber = calculate.stringNumbers.count
-                calculate.operators.remove(at: indexOperator-1)
-                calculate.stringNumbers.remove(at: indexNumber-1)
+                calculate.suppOperator()
+                calculate.suppNumber()
                 updateDisplay()
+                calculate.checkDecimal()
             } else {
                 if calculate.stringNumbers.count == 1 || calculate.operators.count == 1 {
                     calculate.clear()
                     textView.text = "0"
                     calculate.total = 0
                 } else {
-                let indexNumber = calculate.stringNumbers.count
-                    calculate.stringNumbers.remove(at: indexNumber-1)
+                    calculate.suppNumber()
                     calculate.stringNumbers.append("")
                     updateDisplay()
+                    calculate.checkDecimal()
                 }
             }
         }
     }
+
     @IBAction func tappedDecimal(_ sender: UIButton) {
-        calculate.addDecimal()
-        updateDisplay()
+        if calculate.decimal != true && lastTap != true {
+            calculate.addDecimal()
+            updateDisplay()
+        }
     }
 
     // MARK: - Methods

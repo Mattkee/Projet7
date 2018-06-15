@@ -26,6 +26,7 @@ class Calculate {
         return false
     }
     var issue = false
+    var decimal = false
 
     // MARK: - Methods
     func addNewNumber(_ newNumber: Double) {
@@ -50,17 +51,21 @@ class Calculate {
             total = 0
             operators.append(newOperator)
             stringNumbers.append("")
+            decimal = false
         } else {
             operators.append(newOperator)
             stringNumbers.append("")
+            decimal = false
         }
     }
 
     func addDecimal() {
         if stringNumbers.count == 0 {
             stringNumbers[0] = "0."
+            decimal = true
         } else {
             stringNumbers[stringNumbers.count-1] = stringNumbers[stringNumbers.count-1]+"."
+            decimal = true
         }
     }
 
@@ -124,10 +129,31 @@ class Calculate {
             }
         }
     }
+    func suppOperator() {
+        let indexOperator = operators.count
+        operators.remove(at: indexOperator-1)
+    }
+    func suppNumber() {
+        let indexNumber = stringNumbers.count
+        stringNumbers.remove(at: indexNumber-1)
+    }
+
+    func checkDecimal() {
+        var number: String
+        if stringNumbers.last != nil {
+            number = stringNumbers.last!
+            if number.contains(".") {
+                decimal = true
+            } else {
+                decimal = false
+            }
+        }
+    }
 
     func clear() {
         stringNumbers = [String()]
         operators = ["+"]
         issue = false
+        decimal = false
     }
 }
