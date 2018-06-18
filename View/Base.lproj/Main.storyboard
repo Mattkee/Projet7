@@ -76,7 +76,7 @@
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="calculateOperator:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QQ1-oj-oLN"/>
+                                                    <action selector="additionalAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2jM-hG-58n"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -185,7 +185,7 @@
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="calculateOperator:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dT7-Mp-Gx2"/>
+                                                    <action selector="additionalAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8Qd-vy-YFN"/>
                                                 </connections>
                                             </button>
                                         </subviews>

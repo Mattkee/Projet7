@@ -26,7 +26,6 @@ class Calculate {
         return false
     }
     var issue = false
-    var decimal = false
 
     // MARK: - Methods
     func addNewNumber(_ newNumber: Double) {
@@ -51,22 +50,30 @@ class Calculate {
             total = 0
             operators.append(newOperator)
             stringNumbers.append("")
-            decimal = false
         } else {
             operators.append(newOperator)
             stringNumbers.append("")
-            decimal = false
         }
     }
 
     func addDecimal() {
-        if stringNumbers.count == 0 {
-            stringNumbers[0] = "0."
-            decimal = true
-        } else {
-            stringNumbers[stringNumbers.count-1] = stringNumbers[stringNumbers.count-1]+"."
-            decimal = true
+        if let stringNumber = stringNumbers.last {
+            if stringNumber.isEmpty {
+                addNewNumber(0)
+                addPoint()
+                total = 0
+            } else if operators.count == 1 && total != 0 {
+                addNewNumber(total)
+                addPoint()
+                total = 0
+            } else {
+                addPoint()
+            }
         }
+    }
+
+    func addPoint() {
+        stringNumbers[stringNumbers.count-1] = stringNumbers[stringNumbers.count-1]+"."
     }
 
     func calculText() -> String {
@@ -116,9 +123,8 @@ class Calculate {
     func calculePreparationForDivision() {
         for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "÷" {
             if Double(stringNumber)! == 0 {
+                clear()
                 issue = true
-                operators.remove(at: enumerated)
-                stringNumbers.remove(at: enumerated)
                 return
             } else {
                 let total = Double(stringNumbers[enumerated-1])! / Double(stringNumber)!
@@ -138,22 +144,9 @@ class Calculate {
         stringNumbers.remove(at: indexNumber-1)
     }
 
-    func checkDecimal() {
-        var number: String
-        if stringNumbers.last != nil {
-            number = stringNumbers.last!
-            if number.contains(".") {
-                decimal = true
-            } else {
-                decimal = false
-            }
-        }
-    }
-
     func clear() {
         stringNumbers = [String()]
         operators = ["+"]
         issue = false
-        decimal = false
     }
 }

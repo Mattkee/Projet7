@@ -42,8 +42,31 @@ class ViewController: UIViewController {
         return true
     }
 
-    var lastTap: Bool {
+    var lastTapIsOperator: Bool {
         return calculate.stringNumbers.last == "" && calculate.operators.count > 1
+    }
+    var lastTapIsPoint: Bool {
+        if calculate.stringNumbers.count != 0 {
+            if let lastElement = calculate.stringNumbers.last {
+                return lastElement.last == "."
+            }
+        }
+        return false
+    }
+
+    var isDecimal: Bool {
+        if calculate.stringNumbers.count != 0 {
+            if let lastElement = calculate.stringNumbers.last {
+                return lastElement.contains(".")
+            }
+        }
+        if calculate.total != 0 {
+            let total = calculate.total
+            if String(total) != String(Int(total))+".0" {
+                return true
+            }
+        }
+        return false
     }
 
     // MARK: - Outlets
@@ -57,49 +80,57 @@ class ViewController: UIViewController {
     }
 
     @IBAction func calculateOperator(_ sender: UIButton) {
-        let tagOperator = sender.currentTitle
-        if tagOperator! == "+" {
-            calculate.addNewOperator("+")
-            updateDisplay()
-        } else if tagOperator! == "-" {
-            calculate.addNewOperator("-")
-            updateDisplay()
-        } else if tagOperator! == "×" {
-            calculate.addNewOperator("×")
-            updateDisplay()
-        } else if tagOperator! == "÷" {
-            calculate.addNewOperator("÷")
-            updateDisplay()
-        } else if tagOperator! == "=" {
-            total()
-        } else if tagOperator! == "AC" {
-            calculate.clear()
-            textView.text = "0"
-            calculate.total = 0
-            calculate.decimal = false
-        } else if tagOperator! == "⇐" {
-            if lastTap == true && textView.text != "0" {
-                calculate.suppOperator()
-                calculate.suppNumber()
-                updateDisplay()
-                calculate.checkDecimal()
-            } else {
-                if calculate.stringNumbers.count == 1 || calculate.operators.count == 1 {
-                    calculate.clear()
-                    textView.text = "0"
-                    calculate.total = 0
-                } else {
-                    calculate.suppNumber()
-                    calculate.stringNumbers.append("")
-                    updateDisplay()
-                    calculate.checkDecimal()
+        if let tagOperator = sender.currentTitle {
+            if lastTapIsOperator != true {
+                switch tagOperator {
+                case "+" :
+                    addOperator("+")
+                case "-" :
+                    addOperator("-")
+                case "×" :
+                    addOperator("×")
+                case "÷" :
+                    addOperator("÷")
+                default:
+                    total()
                 }
             }
         }
     }
 
+    @IBAction func additionalAction(_ sender: UIButton) {
+        if let tagOperator = sender.currentTitle {
+            switch tagOperator {
+            case "AC" :
+                calculate.clear()
+                textView.text = "0"
+                calculate.total = 0
+            case "⇐" :
+                if lastTapIsOperator == true && textView.text != "0" {
+                    calculate.suppOperator()
+                    calculate.suppNumber()
+                    updateDisplay()
+                } else {
+                    if calculate.stringNumbers.count == 1 || calculate.operators.count == 1 {
+                        calculate.clear()
+                        textView.text = "0"
+                        calculate.total = 0
+                    } else {
+                        calculate.suppNumber()
+                        calculate.stringNumbers.append("")
+                        updateDisplay()
+                    }
+                }
+            default :
+                return
+            }
+        }
+    }
+
     @IBAction func tappedDecimal(_ sender: UIButton) {
-        if calculate.decimal != true && lastTap != true {
+        if isDecimal || lastTapIsOperator {
+            return
+        } else {
             calculate.addDecimal()
             updateDisplay()
         }
@@ -111,6 +142,14 @@ class ViewController: UIViewController {
         textView.text = text
     }
 
+    func addOperator(_ sender: String) {
+        if lastTapIsPoint {
+            calculate.addNewNumber(0)
+        }
+        calculate.addNewOperator(sender)
+        updateDisplay()
+    }
+
     func total() {
         if !isExpressionCorrect {
             return
@@ -119,6 +158,7 @@ class ViewController: UIViewController {
         if calculate.issue == true {
             textView.text = "Impossible de diviser par zero"
             calculate.clear()
+            calculate.total = 0
         } else {
             if String(total) == String(Int(total))+".0" {
                 textView.text = textView.text + "=\(Int(total))"
