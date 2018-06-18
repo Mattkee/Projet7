@@ -77,6 +77,9 @@ class ViewController: UIViewController {
         let number = sender.tag
         calculate.addNewNumber(Double(number))
         updateDisplay()
+        if calculate.total != 0 {
+            calculate.total = 0
+        }
     }
 
     @IBAction func calculateOperator(_ sender: UIButton) {

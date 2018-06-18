@@ -15,7 +15,7 @@ class Calculate {
     var total: Double = 0
     var multiple: Bool {
         for enumerated in operators.indices where operators[enumerated] == "×" {
-                return true
+            return true
         }
         return false
     }
