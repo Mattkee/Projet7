@@ -13,19 +13,21 @@ class Calculate {
     var stringNumbers: [String] = [String()]
     var operators: [String] = ["+"]
     var total: Double = 0
+    var issue = false
+
     var multiple: Bool {
         for enumerated in operators.indices where operators[enumerated] == "×" {
             return true
         }
         return false
     }
+
     var division: Bool {
         for enumerated in operators.indices where operators[enumerated] == "÷" {
             return true
         }
         return false
     }
-    var issue = false
 
     // MARK: - Methods
     func addNewNumber(_ newNumber: Double) {
@@ -56,6 +58,7 @@ class Calculate {
         }
     }
 
+    // for add decimal number
     func addDecimal() {
         if let stringNumber = stringNumbers.last {
             if stringNumber.isEmpty && total == 0 {
@@ -72,10 +75,12 @@ class Calculate {
         }
     }
 
+    // for add decimal point
     func addPoint() {
         stringNumbers[stringNumbers.count-1] = stringNumbers[stringNumbers.count-1]+"."
     }
 
+    // for to preparate text to display
     func calculText() -> String {
         var text = ""
         for (number, stringNumber) in stringNumbers.enumerated() {
@@ -110,6 +115,7 @@ class Calculate {
         return total
     }
 
+    // need to prepare multiplication
     func calculePreparationForMultiple() {
         for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "×" {
                 let total = Double(stringNumbers[enumerated-1])! * Double(stringNumber)!
@@ -120,6 +126,7 @@ class Calculate {
         }
     }
 
+    // need to prepare division
     func calculePreparationForDivision() {
         for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "÷" {
             if Double(stringNumber)! == 0 {
@@ -135,10 +142,13 @@ class Calculate {
             }
         }
     }
+
     func suppOperator() {
         let indexOperator = operators.count
         operators.remove(at: indexOperator-1)
+        suppNumber()
     }
+
     func suppNumber() {
         let indexNumber = stringNumbers.count
         stringNumbers.remove(at: indexNumber-1)

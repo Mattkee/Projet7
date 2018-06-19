@@ -9,6 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+
     // MARK: - Properties
     let calculate = Calculate()
 
@@ -45,6 +46,7 @@ class ViewController: UIViewController {
     var lastTapIsOperator: Bool {
         return calculate.stringNumbers.last == "" && calculate.operators.count > 1
     }
+
     var lastTapIsPoint: Bool {
         if calculate.stringNumbers.count != 0 {
             if let lastElement = calculate.stringNumbers.last {
@@ -105,19 +107,14 @@ class ViewController: UIViewController {
         if let tagOperator = sender.currentTitle {
             switch tagOperator {
             case "AC" :
-                calculate.clear()
-                textView.text = "0"
-                calculate.total = 0
+                allClear()
             case "⇐" :
                 if lastTapIsOperator == true && textView.text != "0" {
                     calculate.suppOperator()
-                    calculate.suppNumber()
                     updateDisplay()
                 } else {
                     if calculate.stringNumbers.count == 1 || calculate.operators.count == 1 {
-                        calculate.clear()
-                        textView.text = "0"
-                        calculate.total = 0
+                        allClear()
                     } else {
                         calculate.suppNumber()
                         calculate.stringNumbers.append("")
@@ -153,22 +150,33 @@ class ViewController: UIViewController {
         updateDisplay()
     }
 
+    func allClear() {
+        calculate.clear()
+        textView.text = "0"
+        calculate.total = 0
+    }
+
+    // allow to display the result of the calculation
     func total() {
         if !isExpressionCorrect {
             return
         }
         let total = calculate.calculateTotal()
         if calculate.issue == true {
+            allClear()
             textView.text = "Impossible de diviser par zero"
-            calculate.clear()
-            calculate.total = 0
         } else {
-            if String(total) == String(Int(total))+".0" {
-                textView.text = textView.text + "=\(Int(total))"
-                calculate.clear()
+            if total > 12 {
+                allClear()
+                textView.text = "Chiffre en dehors des capacités de la calculette"
             } else {
-                textView.text = textView.text + "=\(total)"
-                calculate.clear()
+                if String(total) == String(Int(total))+".0" {
+                    textView.text = textView.text + "=\(Int(total))"
+                    calculate.clear()
+                } else {
+                    textView.text = textView.text + "=\(total)"
+                    calculate.clear()
+                }
             }
         }
     }

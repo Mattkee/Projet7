@@ -143,7 +143,6 @@ class CalculateTest: XCTestCase {
         calculate.addNewOperator("+")
 
         calculate.suppOperator()
-        calculate.suppNumber()
 
         XCTAssertEqual(calculate.calculText(), "2")
     }
