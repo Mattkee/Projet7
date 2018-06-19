@@ -58,7 +58,7 @@ class Calculate {
 
     func addDecimal() {
         if let stringNumber = stringNumbers.last {
-            if stringNumber.isEmpty {
+            if stringNumber.isEmpty && total == 0 {
                 addNewNumber(0)
                 addPoint()
                 total = 0
