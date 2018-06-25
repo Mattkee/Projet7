@@ -166,7 +166,7 @@ class ViewController: UIViewController {
             allClear()
             textView.text = "Impossible de diviser par zero"
         } else {
-            if total > 12 {
+            if String(total).count > 12 {
                 allClear()
                 textView.text = "Chiffre en dehors des capacités de la calculette"
             } else {
