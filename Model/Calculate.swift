@@ -75,12 +75,12 @@ class Calculate {
         }
     }
 
-    // for add decimal point
+    // add decimal point
     func addPoint() {
         stringNumbers[stringNumbers.count-1] = stringNumbers[stringNumbers.count-1]+"."
     }
 
-    // for to preparate text to display
+    // preparate text to display
     func calculText() -> String {
         var text = ""
         for (number, stringNumber) in stringNumbers.enumerated() {
