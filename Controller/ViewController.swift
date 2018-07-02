@@ -167,8 +167,9 @@ class ViewController: UIViewController {
             textView.text = "Impossible de diviser par zero"
         } else {
             if String(total).count > 12 {
-                allClear()
-                textView.text = "Chiffre en dehors des capacités de la calculette"
+                let roundedTotal = Double(round(total*1000)/1000)
+                textView.text = textView.text + "=\(roundedTotal)"
+                calculate.clear()
             } else {
                 if String(total) == String(Int(total))+".0" {
                     textView.text = textView.text + "=\(Int(total))"
