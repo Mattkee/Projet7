@@ -15,15 +15,8 @@ class Calculate {
     var total: Double = 0
     var issue = false
 
-    var multiple: Bool {
-        for enumerated in operators.indices where operators[enumerated] == "×" {
-            return true
-        }
-        return false
-    }
-
-    var division: Bool {
-        for enumerated in operators.indices where operators[enumerated] == "÷" {
+    var priorOperator: Bool {
+        for enumerated in operators.indices where operators[enumerated] == "×" || operators[enumerated] == "÷" {
             return true
         }
         return false
@@ -96,12 +89,8 @@ class Calculate {
 
     func calculateTotal() -> Double {
         repeat {
-           calculePreparationForMultiple()
-        } while multiple == true
-
-        repeat {
-            calculePreparationForDivision()
-        } while division == true
+           calculePreparation()
+        } while priorOperator
 
         for (enumerated, stringNumber) in stringNumbers.enumerated() {
             if let number = Double(stringNumber) {
@@ -115,30 +104,27 @@ class Calculate {
         return total
     }
 
-    // need to prepare multiplication
-    func calculePreparationForMultiple() {
-        for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "×" {
+    // need to prepare multiplication and division
+    func calculePreparation() {
+        for (enumerated, stringNumber) in stringNumbers.enumerated() {
+            if operators[enumerated] == "×" {
                 let total = Double(stringNumbers[enumerated-1])! * Double(stringNumber)!
                 stringNumbers[enumerated-1] = String(total)
                 operators.remove(at: enumerated)
                 stringNumbers.remove(at: enumerated)
                 return
-        }
-    }
-
-    // need to prepare division
-    func calculePreparationForDivision() {
-        for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "÷" {
-            if Double(stringNumber)! == 0 {
-                clear()
-                issue = true
-                return
-            } else {
-                let total = Double(stringNumbers[enumerated-1])! / Double(stringNumber)!
-                stringNumbers[enumerated-1] = String(total)
-                operators.remove(at: enumerated)
-                stringNumbers.remove(at: enumerated)
-                return
+            } else if operators[enumerated] == "÷" {
+                if Double(stringNumber)! == 0 {
+                    clear()
+                    issue = true
+                    return
+                } else {
+                    let total = Double(stringNumbers[enumerated-1])! / Double(stringNumber)!
+                    stringNumbers[enumerated-1] = String(total)
+                    operators.remove(at: enumerated)
+                    stringNumbers.remove(at: enumerated)
+                    return
+                }
             }
         }
     }
