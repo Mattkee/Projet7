@@ -9,11 +9,9 @@
 import Foundation
 
 class Calculate {
-    // MARK: - Properties
     var stringNumbers: [String] = [String()]
     var operators: [String] = ["+"]
-    var total: Double = 0
-    var issue = false
+    var total = 0.0
 
     var priorOperator: Bool {
         for enumerated in operators.indices where operators[enumerated] == "×" || operators[enumerated] == "÷" {
@@ -21,65 +19,92 @@ class Calculate {
         }
         return false
     }
+    var lastTapIsOperatorOrPoint: Bool {
+        if stringNumbers.count != 0 {
+            if let lastElement = stringNumbers.last {
+                return lastElement.last == "." || (stringNumbers.last == "" && operators.count > 1)
+            }
+        }
+        return false
+    }
+    var isDecimal: Bool {
+        if stringNumbers.count != 0 {
+            if let lastElement = stringNumbers.last {
+                return lastElement.contains(".")
+            }
+        }
+        return false
+    }
+    var isDivisionError: Bool {
+        for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "÷" {
+            return Double(stringNumber)! == 0
+        }
+        return false
+    }
+}
 
-    // MARK: - Methods
-    func addNewNumber(_ newNumber: Double) {
-        if String(newNumber) == String(Int(newNumber))+".0" {
-            if let stringNumber = stringNumbers.last {
-                var stringNumberMutable = stringNumber
-                stringNumberMutable += "\(Int(newNumber))"
-                stringNumbers[stringNumbers.count-1] = stringNumberMutable
+// calculation method
+extension Calculate {
+    func addNewElement(_ newElement: String) {
+        switch newElement {
+        case "+", "-", "×", "÷":
+            if total == 0.0 {
+                operators.append(newElement)
+                stringNumbers.append("")
+            } else {
+                addStringNumber(String(total))
+                total = 0.0
+                operators.append(newElement)
+                stringNumbers.append("")
             }
-        } else {
-            if let stringNumber = stringNumbers.last {
-                var stringNumberMutable = stringNumber
-                stringNumberMutable += "\(newNumber)"
-                stringNumbers[stringNumbers.count-1] = stringNumberMutable
-            }
+        case ".":
+            total = 0.0
+            addDecimal()
+        default:
+            total = 0.0
+            addStringNumber(newElement)
         }
     }
 
-    func addNewOperator(_ newOperator: String) {
-        if operators.count == 1 && total != 0 {
-            addNewNumber(total)
-            total = 0
-            operators.append(newOperator)
-            stringNumbers.append("")
-        } else {
-            operators.append(newOperator)
-            stringNumbers.append("")
+    func addStringNumber(_ newElement: String) {
+        if let stringNumber = stringNumbers.last {
+            var stringNumberMutable = stringNumber
+            stringNumberMutable += "\(newElement)"
+            stringNumbers[stringNumbers.count-1] = stringNumberMutable
         }
     }
 
-    // for add decimal number
     func addDecimal() {
         if let stringNumber = stringNumbers.last {
-            if stringNumber.isEmpty && total == 0 {
-                addNewNumber(0)
-                addPoint()
-                total = 0
-            } else if operators.count == 1 && total != 0 {
-                addNewNumber(total)
-                addPoint()
-                total = 0
+            if stringNumber == "" {
+                addStringNumber("0")
+                addStringNumber(".")
             } else {
-                addPoint()
+                addStringNumber(".")
             }
         }
     }
 
-    // add decimal point
-    func addPoint() {
-        stringNumbers[stringNumbers.count-1] = stringNumbers[stringNumbers.count-1]+"."
+    func suppElement() {
+        if lastTapIsOperatorOrPoint == true {
+            operators.remove(at: operators.count-1)
+            stringNumbers.remove(at: stringNumbers.count-1)
+        } else {
+            if stringNumbers.count == 1 || operators.count == 1 {
+                clear()
+            } else {
+                stringNumbers.remove(at: stringNumbers.count-1)
+                stringNumbers.append("")
+            }
+        }
     }
 
-    // preparate text to display
-    func calculText() -> String {
+    func prepareText() -> String {
         var text = ""
-        for (number, stringNumber) in stringNumbers.enumerated() {
+        for (index, stringNumber) in stringNumbers.enumerated() {
             // Add operator
-            if number > 0 {
-                text += operators[number]
+            if index > 0 {
+                text += operators[index]
             }
             // Add number
             text += stringNumber
@@ -87,62 +112,103 @@ class Calculate {
         return text
     }
 
-    func calculateTotal() -> Double {
-        repeat {
-           calculePreparation()
-        } while priorOperator
-
-        for (enumerated, stringNumber) in stringNumbers.enumerated() {
-            if let number = Double(stringNumber) {
-                if operators[enumerated] == "+" {
-                    total += number
-                } else if operators[enumerated] == "-" {
-                    total -= number
-                }
-            }
+    func calculateTotal() -> String {
+        total = 0.0
+        if isDivisionError {
+            let textTotal = "Impossible de diviser par zero"
+            clear()
+            return textTotal
         }
-        return total
-    }
-
-    // need to prepare multiplication and division
-    func calculePreparation() {
-        for (enumerated, stringNumber) in stringNumbers.enumerated() {
-            if operators[enumerated] == "×" {
-                let total = Double(stringNumbers[enumerated-1])! * Double(stringNumber)!
-                stringNumbers[enumerated-1] = String(total)
-                operators.remove(at: enumerated)
-                stringNumbers.remove(at: enumerated)
-                return
-            } else if operators[enumerated] == "÷" {
-                if Double(stringNumber)! == 0 {
-                    clear()
-                    issue = true
-                    return
-                } else {
-                    let total = Double(stringNumbers[enumerated-1])! / Double(stringNumber)!
-                    stringNumbers[enumerated-1] = String(total)
-                    operators.remove(at: enumerated)
-                    stringNumbers.remove(at: enumerated)
-                    return
-                }
-            }
-        }
-    }
-
-    func suppOperator() {
-        let indexOperator = operators.count
-        operators.remove(at: indexOperator-1)
-        suppNumber()
-    }
-
-    func suppNumber() {
-        let indexNumber = stringNumbers.count
-        stringNumbers.remove(at: indexNumber-1)
+        calculPreparation()
+        let textTotal = prepareText() + "=" + String(total)
+        clear()
+        return textTotal
     }
 
     func clear() {
         stringNumbers = [String()]
         operators = ["+"]
-        issue = false
+    }
+}
+
+// preparation for calculation
+extension Calculate {
+    func calculPreparation() {
+        let safeInitStringNumbers = stringNumbers
+        let safeInitOperators = operators
+
+        repeat {
+            for (enumerated, stringNumber) in stringNumbers.enumerated() {
+                if operators[enumerated] == "×" {
+                    complexCalculation("×", enumerated, stringNumber)
+                } else if operators[enumerated] == "÷" {
+                    complexCalculation("÷", enumerated, stringNumber)
+                }
+            }
+        } while priorOperator
+        easyCalculation()
+        stringNumbers = safeInitStringNumbers
+        operators = safeInitOperators
+    }
+
+    func easyCalculation() {
+        for (index, stringNumber) in stringNumbers.enumerated() {
+            if let number = Double(stringNumber) {
+                if operators[index] == "+" {
+                    total += number
+                } else if operators[index] == "-" {
+                    total -= number
+                }
+            }
+        }
+    }
+
+    func complexCalculation(_ stringOperator: String, _ enumerated: Int, _ stringNumber: String) {
+        let numberOne = Double(stringNumbers[enumerated-1])!
+        let numberTwo = Double(stringNumber)!
+        let totalNumber: Double
+        if stringOperator == "×" {
+            totalNumber = numberOne * numberTwo
+            stringNumbers[enumerated-1] = String(totalNumber)
+        } else {
+            totalNumber = numberOne / numberTwo
+            stringNumbers[enumerated-1] = String(totalNumber)
+        }
+        operators.remove(at: enumerated)
+        stringNumbers.remove(at: enumerated)
+    }
+}
+
+// error alert
+extension Calculate {
+    enum Status {
+        case accepted
+        case rejected(String)
+    }
+    var isExpressionCorrect: Status {
+        if let stringNumber = stringNumbers.last {
+            if stringNumber.isEmpty {
+                if stringNumbers.count == 1 {
+                    return .rejected("Démarrez un nouveau calcul !")
+                } else {
+                    return .rejected("Entrez une expression correcte !")
+                }
+            }
+        }
+        return .accepted
+    }
+    var canAddOperator: Status {
+        if let stringNumber = stringNumbers.last {
+            if stringNumber.isEmpty && total == 0.0 || lastTapIsOperatorOrPoint {
+                return .rejected("Expression incorrecte !")
+            }
+        }
+        return .accepted
+    }
+    var decimalError: Status {
+        if isDecimal || lastTapIsOperatorOrPoint {
+            return .rejected("Expression incorrecte !")
+        }
+        return .accepted
     }
 }

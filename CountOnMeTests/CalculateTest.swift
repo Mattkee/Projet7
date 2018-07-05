@@ -20,61 +20,61 @@ class CalculateTest: XCTestCase {
 
     func testGivenNoElementToCalculate_WhenAddToCalculate1Plus1_ThenTextToDisplayIs1Plus1() {
 
-        calculate.addNewNumber(1)
-        calculate.addNewOperator("+")
-        calculate.addNewNumber(1)
+        calculate.addNewElement("1")
+        calculate.addNewElement("+")
+        calculate.addNewElement("1")
 
-        XCTAssertEqual(calculate.calculText(), "1+1")
+        XCTAssertEqual(calculate.prepareText(), "1+1")
     }
 
     func testGivenElementToCalculateIs1Plus1_WhenCalculating1Plus1_ThenResultIs2() {
 
-        calculate.addNewNumber(1)
-        calculate.addNewOperator("+")
-        calculate.addNewNumber(1)
+        calculate.addNewElement("1")
+        calculate.addNewElement("+")
+        calculate.addNewElement("1")
 
-        XCTAssertEqual(calculate.calculateTotal(), 2)
+        XCTAssertEqual(calculate.calculateTotal(), "1+1=2")
     }
     func testGivenNoElementToCalculate_WhenAddToCalculate2Minus1_ThenTextToDisplayIs2Minus1() {
 
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("-")
-        calculate.addNewNumber(1)
+        calculate.addNewElement("2")
+        calculate.addNewElement("-")
+        calculate.addNewElement("1")
 
-        XCTAssertEqual(calculate.calculText(), "2-1")
+        XCTAssertEqual(calculate.prepareText(), "2-1")
     }
     func testGivenElementToCalculateIs2Minus1_WhenCalculating2Minus1_ThenResultIs1() {
 
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("-")
-        calculate.addNewNumber(1)
+        calculate.addNewElement("2")
+        calculate.addNewElement("-")
+        calculate.addNewElement("1")
 
-        XCTAssertEqual(calculate.calculateTotal(), 1)
+        XCTAssertEqual(calculate.calculateTotal(), "2-1=1")
     }
     func testGivenElementToCalculateIs1Plus2multipliedBy2_WhenCalculating_ThenResultIs5() {
-        calculate.addNewNumber(1)
-        calculate.addNewOperator("+")
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("×")
-        calculate.addNewNumber(2)
+        calculate.addNewElement("1")
+        calculate.addNewElement("+")
+        calculate.addNewElement("2")
+        calculate.addNewElement("×")
+        calculate.addNewElement("2")
 
-        XCTAssertEqual(calculate.calculateTotal(), 5)
+        XCTAssertEqual(calculate.calculateTotal(), "1+2×2=5")
     }
     func testGivenElementToCalculateIs1Plus2dividedBy2_WhenCalculating_ThenResultIs2() {
-        calculate.addNewNumber(1)
-        calculate.addNewOperator("+")
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("÷")
-        calculate.addNewNumber(2)
+        calculate.addNewElement("1")
+        calculate.addNewElement("+")
+        calculate.addNewElement("2")
+        calculate.addNewElement("÷")
+        calculate.addNewElement("2")
 
-        XCTAssertEqual(calculate.calculateTotal(), 2)
+        XCTAssertEqual(calculate.calculateTotal(), "1+2÷2=2")
     }
     func testGivenElementToCalculateIs1Plus2dividedBy0_WhenCalculating_ThenNoResultDataIsDeletedAndThereAreAnIssue() {
-        calculate.addNewNumber(1)
-        calculate.addNewOperator("+")
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("÷")
-        calculate.addNewNumber(0)
+        calculate.addNewElement("1")
+        calculate.addNewElement("+")
+        calculate.addNewElement("2")
+        calculate.addNewElement("÷")
+        calculate.addNewElement("0")
 
         var element = false
         let total = calculate.calculateTotal()
@@ -84,66 +84,64 @@ class CalculateTest: XCTestCase {
             }
         }
 
-        XCTAssertEqual(total, 0)
+        XCTAssertEqual(total, "Impossible de diviser par zero")
         XCTAssertTrue(element)
         XCTAssertTrue(calculate.operators.count == 1)
-        XCTAssertEqual(calculate.issue, true)
     }
-    func testGivenElementToCalculateIs2Point2Plus2Point2_WhenAddNumber_ThenTextToDisplayIs2Point2Plus2Point2() {
-        calculate.addNewNumber(2)
-        calculate.addDecimal()
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("+")
-        calculate.addNewNumber(2)
-        calculate.addDecimal()
-        calculate.addNewNumber(2)
+    func testGivenNoElementToCalculate_WhenAddElementToCalculateIs2Point2Plus2Point2_ThenTextToDisplayIs2Point2Plus2Point2() {
+        calculate.addNewElement("2")
+        calculate.addNewElement(".")
+        calculate.addNewElement("2")
+        calculate.addNewElement("+")
+        calculate.addNewElement("2")
+        calculate.addNewElement(".")
+        calculate.addNewElement("2")
 
-        XCTAssertEqual(calculate.calculText(), "2.2+2.2")
+        XCTAssertEqual(calculate.prepareText(), "2.2+2.2")
     }
     func testGivenElementToCalculateIs2Point2Plus2Point2_WhenCalculating_ThenResultIs4Point4() {
-        calculate.addNewNumber(2)
-        calculate.addDecimal()
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("+")
-        calculate.addNewNumber(2)
-        calculate.addDecimal()
-        calculate.addNewNumber(2)
+        calculate.addNewElement("2")
+        calculate.addNewElement(".")
+        calculate.addNewElement("2")
+        calculate.addNewElement("+")
+        calculate.addNewElement("2")
+        calculate.addNewElement(".")
+        calculate.addNewElement("2")
 
-        XCTAssertEqual(calculate.calculateTotal(), 4.4)
+        XCTAssertEqual(calculate.calculateTotal(), "2.2+2.2=4.4")
     }
     func testGivenTotalIs2Point2_WhenAddOperatorPlus_ThenTextToDisplayis2Point2Plus() {
         calculate.total = 2.2
-        calculate.addNewOperator("+")
+        calculate.addNewElement("+")
 
-        XCTAssertEqual(calculate.calculText(), "2.2+")
+        XCTAssertEqual(calculate.prepareText(), "2.2+")
     }
     func testGivenNoElementAddInCalculator_WhenAddDecimalPoint_ThenTextToDisplayIs0Point() {
-        calculate.addDecimal()
+        calculate.addNewElement(".")
 
-        XCTAssertEqual(calculate.calculText(), "0.")
+        XCTAssertEqual(calculate.prepareText(), "0.")
     }
     func testGivenTotalIs3_WhenAddDecimalPoint_ThenTextToDisplayIs3Point() {
         calculate.total = 3
-        calculate.addDecimal()
+        calculate.addNewElement(".")
 
-        XCTAssertEqual(calculate.calculText(), "3.")
+        XCTAssertEqual(calculate.prepareText(), "3.")
     }
     func testGivenTextToCalculateIs2Plus2_WhenDeleted2_ThenTextToDisplayIs2Plus() {
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("+")
-        calculate.addNewNumber(2)
+        calculate.addNewElement("2")
+        calculate.addNewElement("+")
+        calculate.addNewElement("2")
 
-        calculate.suppNumber()
-        calculate.stringNumbers.append("")
+        calculate.suppElement()
 
-        XCTAssertEqual(calculate.calculText(), "2+")
+        XCTAssertEqual(calculate.prepareText(), "2+")
     }
     func testGivenTextToCalculateIs2Plus_WhenDeletedPlus_ThenTextToDisplayIs2() {
-        calculate.addNewNumber(2)
-        calculate.addNewOperator("+")
+        calculate.addNewElement("2")
+        calculate.addNewElement("+")
 
-        calculate.suppOperator()
+        calculate.suppElement()
 
-        XCTAssertEqual(calculate.calculText(), "2")
+        XCTAssertEqual(calculate.prepareText(), "2")
     }
 }
