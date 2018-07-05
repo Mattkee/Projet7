@@ -58,8 +58,18 @@ extension Calculate {
                 stringNumbers.append("")
             }
         case ".":
-            total = 0.0
-            addDecimal()
+            if total == 0.0 {
+                addDecimal()
+            } else if total != 0.0 {
+                if String(total) == String(Int(total))+".0" {
+                    addNewElement(String(Int(total)))
+                    total = 0.0
+                    addDecimal()
+                } else {
+                    total = 0.0
+                    addDecimal()
+                }
+            }
         default:
             total = 0.0
             addStringNumber(newElement)
@@ -114,13 +124,21 @@ extension Calculate {
 
     func calculateTotal() -> String {
         total = 0.0
+        var textTotal: String
         if isDivisionError {
             let textTotal = "Impossible de diviser par zero"
             clear()
             return textTotal
         }
         calculPreparation()
-        let textTotal = prepareText() + "=" + String(total)
+        if String(total).count > 12 {
+            let roundedTotal = Double(round(total*1000)/1000)
+            textTotal = prepareText() + "=" + String(roundedTotal)
+        } else if String(total) == String(Int(total))+".0" {
+            textTotal = prepareText() + "=" + String(Int(total))
+        } else {
+            textTotal = prepareText() + "=" + String(total)
+        }
         clear()
         return textTotal
     }

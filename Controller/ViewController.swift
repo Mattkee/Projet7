@@ -46,7 +46,11 @@ class ViewController: UIViewController {
         }
     }
     func updateDisplay() {
-        textView.text = calculate.prepareText()
+        if calculate.prepareText() != "" {
+            textView.text = calculate.prepareText()
+        } else {
+            textView.text = "0"
+        }
     }
 }
 // Alerte methods
