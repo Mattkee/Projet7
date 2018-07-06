@@ -20,20 +20,12 @@ class Calculate {
         return false
     }
     var lastTapIsOperatorOrPoint: Bool {
-        if stringNumbers.count != 0 {
-            if let lastElement = stringNumbers.last {
-                return lastElement.last == "." || (stringNumbers.last == "" && operators.count > 1)
-            }
-        }
-        return false
+        let lastElement = stringNumbers.last
+        return lastElement!.last == "." || (stringNumbers.last == "" && operators.count > 1)
     }
     var isDecimal: Bool {
-        if stringNumbers.count != 0 {
-            if let lastElement = stringNumbers.last {
-                return lastElement.contains(".")
-            }
-        }
-        return false
+        let lastElement = stringNumbers.last
+        return lastElement!.contains(".")
     }
     var isDivisionError: Bool {
         for (enumerated, stringNumber) in stringNumbers.enumerated() where operators[enumerated] == "÷" {

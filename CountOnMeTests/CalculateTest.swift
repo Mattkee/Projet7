@@ -18,6 +18,33 @@ class CalculateTest: XCTestCase {
         calculate = Calculate()
     }
 
+    func checkExpressionError() -> String {
+        switch calculate.isExpressionCorrect {
+        case .accepted:
+            return ""
+        case .rejected(let error):
+            return error
+        }
+    }
+
+    func checkDecimalError() -> String {
+        switch calculate.decimalError {
+        case .accepted:
+            return ""
+        case .rejected(let error):
+            return error
+        }
+    }
+
+    func checkError(_ newElement: String) -> String {
+        switch calculate.canAddOperator {
+        case .accepted:
+            return ""
+        case .rejected(let error):
+            return error
+        }
+    }
+
     func testGivenNoElementToCalculate_WhenAddToCalculate1Plus1_ThenTextToDisplayIs1Plus1() {
 
         calculate.addNewElement("1")
@@ -143,5 +170,86 @@ class CalculateTest: XCTestCase {
         calculate.suppElement()
 
         XCTAssertEqual(calculate.prepareText(), "2")
+    }
+    func testGivenElementToCalculateIs50DividedBy3Point2_WhenCalculating_ThenResultIs1Point553() {
+        calculate.addNewElement("50")
+        calculate.addNewElement("÷")
+        calculate.addNewElement("32.2")
+
+        XCTAssertEqual(calculate.calculateTotal(), "50÷32.2=1.553")
+    }
+    func testGivenTotalIs3Point2_WhenAddDecimalPoint_ThenResultIs0Point() {
+        calculate.total = 3.2
+        calculate.addNewElement(".")
+
+        XCTAssertEqual(calculate.prepareText(), "0.")
+    }
+    func testGivenElementToCalculateIs3_WhenResetAllElement_ThenThereIsNoElement() {
+        calculate.addNewElement("3")
+        calculate.suppElement()
+
+        var arrayIsEmpty = false
+        if calculate.stringNumbers.count == 1 {
+            if let stringNumber = calculate.stringNumbers.last {
+                if stringNumber.isEmpty {
+                    arrayIsEmpty = true
+                }
+            }
+        }
+
+        XCTAssertTrue(arrayIsEmpty)
+    }
+    func testGivenNoElementToCalculate_WhenCalculating_ThenTextForAlerteIsDémarrezUnNouveauCalcul() {
+
+        let isExpressionCorrect = checkExpressionError()
+
+        XCTAssertEqual("Démarrez un nouveau calcul !", isExpressionCorrect)
+    }
+    func testGivenElementToCalculateIs2Plus_WhenCalculating_ThenTextForAlerteIsEntrezUneExpressionCorrecte() {
+        calculate.addNewElement("2")
+        calculate.addNewElement("+")
+
+        let isExpressionCorrect = checkExpressionError()
+
+        XCTAssertEqual("Entrez une expression correcte !", isExpressionCorrect)
+    }
+    func testGivenElementToCalculateIs2Plus2_WhenCalculating_ThenThereIsNoAlert() {
+        calculate.addNewElement("2")
+        calculate.addNewElement("+")
+        calculate.addNewElement("2")
+
+        let isExpressionCorrect = checkExpressionError()
+
+        XCTAssertEqual("", isExpressionCorrect)
+    }
+    func testGivenElementToCalculateIs2Point_WhenObserveIsDecimal_ThenTextForAlerteIsExpressionCorrecte() {
+        calculate.addNewElement("2")
+        calculate.addNewElement(".")
+
+        let isDecimalError = checkDecimalError()
+
+        XCTAssertEqual("Expression incorrecte !", isDecimalError)
+    }
+    func testGivenElementToCalculateIs2_WhenObserveIsDecimal_ThenThereIsNoAlert() {
+        calculate.addNewElement("2")
+
+        let isDecimalError = checkDecimalError()
+
+        XCTAssertEqual("", isDecimalError)
+    }
+    func testGivenElementToCalculateIs2Plus_WhenObserveCanAddOperator_ThenTextForAlerteIsExpressionIncorrecte() {
+        calculate.addNewElement("2")
+        calculate.addNewElement("+")
+
+        let canAddOperator = checkError("+")
+
+        XCTAssertEqual("Expression incorrecte !", canAddOperator)
+    }
+    func testGivenElementToCalculateIs2_WhenObserveCanAddOperator_ThenThereIsNoAlert() {
+        calculate.addNewElement("2")
+
+        let canAddOperator = checkError("+")
+
+        XCTAssertEqual("", canAddOperator)
     }
 }
