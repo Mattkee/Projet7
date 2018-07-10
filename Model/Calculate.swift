@@ -8,10 +8,15 @@
 
 import Foundation
 
+protocol DisplayAlert {
+    func showAlert(title: String, message: String)
+}
+
 class Calculate {
     var stringNumbers: [String] = [String()]
     var operators: [String] = ["+"]
     var total = 0.0
+    var displayAlertDelegate: DisplayAlert?
 
     var priorOperator: Bool {
         for enumerated in operators.indices where operators[enumerated] == "×" || operators[enumerated] == "÷" {
@@ -54,7 +59,7 @@ extension Calculate {
                 addDecimal()
             } else if total != 0.0 {
                 if String(total) == String(Int(total))+".0" {
-                    addNewElement(String(Int(total)))
+                    addStringNumber(String(Int(total)))
                     total = 0.0
                     addDecimal()
                 } else {
@@ -174,6 +179,7 @@ extension Calculate {
     }
 
     func complexCalculation(_ stringOperator: String, _ enumerated: Int, _ stringNumber: String) {
+
         let numberOne = Double(stringNumbers[enumerated-1])!
         let numberTwo = Double(stringNumber)!
         let totalNumber: Double
@@ -191,34 +197,34 @@ extension Calculate {
 
 // error alert
 extension Calculate {
-    enum Status {
-        case accepted
-        case rejected(String)
-    }
-    var isExpressionCorrect: Status {
+
+    var isExpressionCorrect: Bool {
         if let stringNumber = stringNumbers.last {
             if stringNumber.isEmpty {
                 if stringNumbers.count == 1 {
-                    return .rejected("Démarrez un nouveau calcul !")
+                    displayAlertDelegate?.showAlert(title: "zero", message: "Démarrez un nouveau calcul !")
                 } else {
-                    return .rejected("Entrez une expression correcte !")
+                    displayAlertDelegate?.showAlert(title: "impossible calculation", message: "Entrez une expression correcte !")
                 }
+                return false
             }
         }
-        return .accepted
+        return true
     }
-    var canAddOperator: Status {
+    var canAddOperator: Bool {
         if let stringNumber = stringNumbers.last {
             if stringNumber.isEmpty && total == 0.0 || lastTapIsOperatorOrPoint {
-                return .rejected("Expression incorrecte !")
+                displayAlertDelegate?.showAlert(title: "operator error", message: "Expression incorrecte !")
+                return false
             }
         }
-        return .accepted
+        return true
     }
-    var decimalError: Status {
+    var decimalError: Bool {
         if isDecimal || lastTapIsOperatorOrPoint {
-            return .rejected("Expression incorrecte !")
+            displayAlertDelegate?.showAlert(title: "decimal error", message: "Expression incorrecte !")
+            return false
         }
-        return .accepted
+        return true
     }
 }

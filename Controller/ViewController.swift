@@ -12,6 +12,11 @@ class ViewController: UIViewController {
     // MARK: - Properties
     let calculate = Calculate()
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        calculate.displayAlertDelegate = self
+    }
+
     // MARK: - Outlets
     @IBOutlet weak var textView: UITextView!
 
@@ -22,10 +27,14 @@ class ViewController: UIViewController {
             case "=":
                 total()
             case "+", "-", "×", "÷":
-                checkError(tagButton)
+                if calculate.canAddOperator {
+                    calculate.addNewElement(tagButton)
+                }
                 updateDisplay()
             case ".":
-                checkDecimalError()
+                if calculate.decimalError {
+                    calculate.addNewElement(".")
+                }
                 updateDisplay()
             case "AC":
                 calculate.clear()
@@ -41,7 +50,7 @@ class ViewController: UIViewController {
     }
     // MARK: - Methods
     func total() {
-        if checkExpressionError() == true {
+        if calculate.isExpressionCorrect {
             textView.text = calculate.calculateTotal()
         }
     }
@@ -53,39 +62,10 @@ class ViewController: UIViewController {
         }
     }
 }
-// Alerte methods
-extension ViewController {
 
-    private func checkError(_ newElement: String) {
-        switch calculate.canAddOperator {
-        case .accepted:
-            calculate.addNewElement(newElement)
-        case .rejected(let error):
-            presentAlert(with: error)
-        }
-    }
-
-    private func checkExpressionError() -> Bool {
-        switch calculate.isExpressionCorrect {
-        case .accepted:
-            return true
-        case .rejected(let error):
-            presentAlert(with: error)
-            return false
-        }
-    }
-
-    private func checkDecimalError() {
-        switch calculate.decimalError {
-        case .accepted:
-            calculate.addNewElement(".")
-        case .rejected(let error):
-            presentAlert(with: error)
-        }
-    }
-
-    private func presentAlert(with error: String) {
-        let alerteVC = UIAlertController(title: "Erreur", message: error, preferredStyle: .alert)
+extension ViewController: DisplayAlert {
+    func showAlert(title: String, message: String) {
+        let alerteVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
         alerteVC.addAction(action)
         present(alerteVC, animated: true, completion: nil)
