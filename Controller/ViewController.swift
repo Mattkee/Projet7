@@ -63,6 +63,7 @@ class ViewController: UIViewController {
     }
 }
 
+// MARK: - Alert Management
 extension ViewController: DisplayAlert {
     func showAlert(title: String, message: String) {
         let alerteVC = UIAlertController(title: title, message: message, preferredStyle: .alert)

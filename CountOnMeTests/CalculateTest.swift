@@ -174,13 +174,13 @@ class CalculateTest: XCTestCase {
     }
     func testGivenNoElementToCalculate_WhenCalculating_ThenTextForAlerteIsDémarrezUnNouveauCalcul() {
 
-        XCTAssertFalse(calculate.isExpressionCorrect, "Démarrez un nouveau calcul !")
+        XCTAssertFalse(calculate.isExpressionCorrect)
     }
     func testGivenElementToCalculateIs2Plus_WhenCalculating_ThenTextForAlerteIsEntrezUneExpressionCorrecte() {
         calculate.addNewElement("2")
         calculate.addNewElement("+")
 
-        XCTAssertFalse(calculate.isExpressionCorrect, "Entrez une expression correcte !")
+        XCTAssertFalse(calculate.isExpressionCorrect)
     }
     func testGivenElementToCalculateIs2Plus2_WhenCalculating_ThenThereIsNoAlert() {
         calculate.addNewElement("2")
@@ -193,7 +193,7 @@ class CalculateTest: XCTestCase {
         calculate.addNewElement("2")
         calculate.addNewElement(".")
 
-        XCTAssertFalse(calculate.decimalError, "Expression incorrecte !")
+        XCTAssertFalse(calculate.decimalError)
     }
     func testGivenElementToCalculateIs2_WhenObserveIsDecimal_ThenThereIsNoAlert() {
         calculate.addNewElement("2")
@@ -204,7 +204,7 @@ class CalculateTest: XCTestCase {
         calculate.addNewElement("2")
         calculate.addNewElement("+")
 
-        XCTAssertFalse(calculate.canAddOperator, "Expression incorrecte !")
+        XCTAssertFalse(calculate.canAddOperator)
     }
     func testGivenElementToCalculateIs2_WhenObserveCanAddOperator_ThenThereIsNoAlert() {
         calculate.addNewElement("2")

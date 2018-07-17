@@ -13,6 +13,7 @@ protocol DisplayAlert {
 }
 
 class Calculate {
+    // MARK: - Properties
     var stringNumbers: [String] = [String()]
     var operators: [String] = ["+"]
     var total = 0.0
@@ -40,7 +41,7 @@ class Calculate {
     }
 }
 
-// calculation method
+// MARK: - Calculations Methods
 extension Calculate {
     func addNewElement(_ newElement: String) {
         switch newElement {
@@ -146,7 +147,7 @@ extension Calculate {
     }
 }
 
-// preparation for calculation
+// MARK: - Calculation preparation Methods
 extension Calculate {
     func calculPreparation() {
         let safeInitStringNumbers = stringNumbers
@@ -195,7 +196,7 @@ extension Calculate {
     }
 }
 
-// error alert
+// MARK: - Alert management properties
 extension Calculate {
 
     var isExpressionCorrect: Bool {
